@@ -1,5 +1,6 @@
 import multer from "multer";
 import JobDescription from "../models/JobDescription.js";
+import mongoose from "mongoose";
 import {
   detectBias,
   calculateDiversityScore,
