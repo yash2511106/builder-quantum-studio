@@ -43,19 +43,28 @@ export const analyzeText = async (req, res) => {
     const biasItems = detectBias(text);
     const diversityScore = calculateDiversityScore(biasItems, text.length);
 
-    // Save analysis to database
-    const jobDescription = new JobDescription({
-      originalText: text,
-      biasList: biasItems,
-      diversityScore,
-      userId: req.user._id,
-      title: title || "Job Description Analysis",
-    });
+    let analysisId = "demo-analysis-" + Date.now();
 
-    await jobDescription.save();
+    // Save analysis to database if connected
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const jobDescription = new JobDescription({
+          originalText: text,
+          biasList: biasItems,
+          diversityScore,
+          userId: req.user._id,
+          title: title || "Job Description Analysis",
+        });
+
+        await jobDescription.save();
+        analysisId = jobDescription._id;
+      } catch (dbError) {
+        console.warn("Database save failed, using demo mode:", dbError.message);
+      }
+    }
 
     res.json({
-      id: jobDescription._id,
+      id: analysisId,
       biasItems,
       diversityScore,
       totalBiasCount: biasItems.length,
