@@ -99,6 +99,35 @@ export const login = async (req, res) => {
       });
     }
 
+    // Check if database is connected
+    if (mongoose.connection.readyState !== 1) {
+      // For demo purposes, accept demo credentials
+      if (email === "demo@biasdetector.ai" && password === "demo123") {
+        const token = jwt.sign(
+          { userId: "demo-user-id" },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "7d",
+          },
+        );
+
+        return res.json({
+          message: "Demo login successful (database not connected)",
+          token,
+          user: {
+            id: "demo-user-id",
+            name: "Demo User",
+            email: "demo@biasdetector.ai",
+            organization: "Demo Organization",
+          },
+        });
+      } else {
+        return res.status(400).json({
+          message: "Database not connected. Use demo@biasdetector.ai / demo123",
+        });
+      }
+    }
+
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
