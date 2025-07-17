@@ -223,6 +223,50 @@ export const getHistory = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+
+    // If database is not connected, return demo data
+    if (mongoose.connection.readyState !== 1) {
+      const demoJobDescriptions = [
+        {
+          id: "demo-1",
+          title: "Demo Analysis - Software Engineer",
+          preview:
+            "We are looking for a rock star developer who is young and aggressive to join our team. The ideal candidate should be articulate and a cultural fit...",
+          diversityScore: 42,
+          biasCount: 5,
+          createdAt: new Date(Date.now() - 86400000), // 1 day ago
+        },
+        {
+          id: "demo-2",
+          title: "Demo Analysis - Marketing Manager",
+          preview:
+            "Seeking a dynamic marketing professional with fresh ideas. Must be energetic and driven to succeed in our fast-paced environment...",
+          diversityScore: 67,
+          biasCount: 3,
+          createdAt: new Date(Date.now() - 172800000), // 2 days ago
+        },
+        {
+          id: "demo-3",
+          title: "Demo Analysis - Senior Developer",
+          preview:
+            "Looking for an experienced software developer to join our team. Must have strong technical skills and ability to work collaboratively...",
+          diversityScore: 89,
+          biasCount: 0,
+          createdAt: new Date(Date.now() - 259200000), // 3 days ago
+        },
+      ];
+
+      return res.json({
+        jobDescriptions: demoJobDescriptions,
+        pagination: {
+          page: 1,
+          limit: 10,
+          total: 3,
+          pages: 1,
+        },
+      });
+    }
+
     const skip = (page - 1) * limit;
 
     const jobDescriptions = await JobDescription.find({
