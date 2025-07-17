@@ -252,7 +252,10 @@ const Dashboard = () => {
                   <div
                     className="p-4 bg-gray-50 rounded-lg border border-gray-200 text-gray-700 leading-relaxed"
                     dangerouslySetInnerHTML={{
-                      __html: getBiasHighlights(jobText, analysisResult.biasItems),
+                      __html: getBiasHighlights(
+                        jobText,
+                        analysisResult.biasItems,
+                      ),
                     }}
                   />
                 </div>
@@ -342,7 +345,9 @@ const Dashboard = () => {
                 <button className="w-full flex items-center gap-3 p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
                   <Eye className="w-5 h-5 text-blue-600" />
                   <div>
-                    <div className="font-medium text-gray-900">View History</div>
+                    <div className="font-medium text-gray-900">
+                      View History
+                    </div>
                     <div className="text-sm text-gray-600">
                       See past analyses
                     </div>
@@ -367,7 +372,7 @@ const Dashboard = () => {
                     </div>
                     <div className="text-sm text-gray-600">Track progress</div>
                   </div>
-                </div>
+                </button>
               </div>
             </div>
           </div>
